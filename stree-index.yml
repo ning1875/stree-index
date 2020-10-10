@@ -1,0 +1,46 @@
+mysql_server:
+  host: "localhost:3306"
+  username: "root"
+  password: "root"
+  dbname: "service_tree"
+  log_print: false
+  maxidleconns: 10
+  maxopenconns: 100
+  table_info:
+      table_ecs: service_tree_ecs
+      table_elb: service_tree_elb
+      table_rds: service_tree_rds
+      table_dcs: service_tree_dcs
+      table_dns: service_tree_dns
+      table_path_tree: service_tree_path_tree
+      table_cloud_instance_type: service_tree_cloud_instance_type
+
+redis_server:
+  host: "localhost:6379"
+  password: "xxxxxx"
+  dbname: 1
+  keys:
+    index_node_map_name: stree_index_node_map_name
+    index_node_key_prefix: stree_index_node_
+    index_increment_update_key: stree_index_increment_update_
+    all_gpa_cache_key: all_gpa_cache_key
+
+# g.p.a模型key对应table中json字段名称
+tree_info:
+  name_g: group
+  name_p: stree-project
+  name_a: stree-app
+
+
+
+
+index_update:
+  all_index_update_interval_minute: 10
+  tree_node_statistics_interval_minute: 10
+  header_key: Authorization
+  token:  admin
+
+http:
+  listen_addr:   :9393
+
+
