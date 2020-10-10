@@ -4,8 +4,8 @@
 # 什么是服务树及其核心功能
 **服务树效果图**
 可以看我之前写的文章 [服务树系列\(一\)：什么是服务树及其核心功能](https://segmentfault.com/a/1190000023761706)
-![image](https://github.com/ning1875/stree-index/blob/master/images/tree_node.png)
-![image](https://github.com/ning1875/stree-index/blob/master/images/tree_mon.png)
+![image](https://github.com/ning1875/stree-index/blob/main/images/tree_node.png)
+![image](https://github.com/ning1875/stree-index/blob/main/images/tree_mon.png)
 ## 核心功能有三个
 - 树级结构
 - 灵活的资源查询
