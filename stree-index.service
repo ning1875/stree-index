@@ -1,0 +1,19 @@
+[Unit]
+Description="ning1875 opensource service tree"
+Documentation=https://github.com/ning1875/stree-index
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/stree-index -f /etc/stree-index/stree-index.yml
+Restart=on-failure
+RestartSecs=10s
+SuccessExitStatus=0
+LimitNOFILE=3000000
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=stree-index
+
+[Install]
+WantedBy=multi-user.target
+

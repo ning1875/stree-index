@@ -141,15 +141,15 @@ type HeadIndexReader struct {
 - db中所有的字段出timestamp外都可以用来构建索引，而后能所有的字段都可以被用作查询条件
 举例
 ```python
-    req_data = {
-        'resource_type': 'elb',
-        'use_index': True,
-        'labels': [
-            # 查询 group 不等于CBS，name ，正则匹配.*0dff.*，stree-app等于collecter的elb资源列表
-            {'key': 'group', 'value': 'CBS', 'type': 2},
-            {'key': 'name', 'value': '.*0dff.*', 'type': 3},
-            {'key': 'stree-app', 'value': 'collecter', 'type': 1}]
-    }
+req_data = {
+    'resource_type': 'elb',
+    'use_index': True,
+    'labels': [
+        # 查询 group 不等于CBS，name ，正则匹配.*0dff.*，stree-app等于collecter的elb资源列表
+        {'key': 'group', 'value': 'CBS', 'type': 2},
+        {'key': 'name', 'value': '.*0dff.*', 'type': 3},
+        {'key': 'stree-app', 'value': 'collecter', 'type': 1}]
+}
 ```
 ### 按key查询分布情况的实现
 ![image.png](/img/bVcHcIS)
@@ -192,45 +192,80 @@ def query_dis():
 ```
 
 # 使用
+## step 1 准备工作
+> 准备mysql和redis，并修改配置文件对应字段
 ## 创建表
-根据scripts/db_schema.sql 建表
-### 资源数据表 
+
+> 根据scripts/db_schema.sql 建表
+
+> 资源数据表 
 - ecs 云服务器
 - elb 云负载均衡器
 - rds 云关系型数据库
 - dcs 云缓存
 - 对应表名为
 `service_tree_ecs` `service_tree_elb` `service_tree_rds` `service_tree_dcs`
-### ecs 云服务器规格表  `service_tree_cloud_instance_type`
-### 树结构path表 
+
+> ecs 云服务器规格表  `service_tree_cloud_instance_type`
+> 树结构path表 
+>
 ## 灌入数据
 - 资源数据可以由同步得来，自行实现即可
-- 各个资源表中数据tags字段为json类型，切必须包含stree-index.yml的服务树tag 
-    ```yaml
-    # g.p.a模型key对应table中json字段名称
-    tree_info:
-     name_g: group
-      name_p: stree-project
-      name_a: stree-app
-    ```
+- 各个资源表中数据tags字段为json类型，切必须包含stree-index.yml的服务树tag
+ 
+```yaml
+# g.p.a模型key对应table中json字段名称
+tree_info:
+ name_g: group
+  name_p: stree-project
+  name_a: stree-app
+```
+
 ![image.png](/img/bVcHcKn)
 
 - ecs 云服务器规格表 可以由`scripts/instance_type_insert.sh`灌入，其中包含华为和aws的大部分规格数据
-## 安装stree-index
-```shell
-git clone https://github.com/ning1875/stree-index.git 
-cd  dynamic-sharding/pkg/ && go build   -o stree-index  main.go
+
+## step 2 编译或下载
+> 直接下载
+```shell script
+wget https://github.com/ning1875/stree-index/releases/download/v1.0/stree-index-1.0.linux-amd64.tar.gz
 ```
-### 补充stree-index.yml 中db，redis等信息
-### 启动服务 
-```c
+> 自行编译
+
+```shell script
+git clone https://github.com/ning1875/stree-index.git
+cd  stree-index && make 
+```
+## step 3 补充信息
+> 补充stree-index.yml 中db，redis等信息
+
+## step 4 启动服务
+> 直接启动
+```shell script
 ./stree-index --config.file=stree-index.yml
 ```
-### stree-index会自动根据资源表中服务树tag构建服务树 
-```c
-查询path表应该有数据
+> 使用systemd启动
+```shell script
+/bin/cp -f stree-index.service /etc/systemd/system/
+/bin/cp -f stree-index /bin/
+mkdir -pv /etc/stree-index 
+/bin/cp -f stree-index.yml /etc/stree-index/
+systemctl enable /etc/systemd/system/stree-index.service
+systemctl start stree-index.service
+
+```
+> 观察日志
+```shell script
+tail -f /var/log/messages |grep stree-index
+```
+## step 5 stree-index会自动根据资源表中服务树tag构建服务树
+> 查询path表应该有数据
+ 
+```shell script
 select * from service_tree_path_tree limit 20;
 ```
+
+# 查询
 ## 使用stree-index
 ### 查询接口数据结构
 ```
@@ -276,10 +311,10 @@ select * from service_tree_path_tree limit 20;
 - 2：not_eq 不等于      : key!=value
 - 3：reg 正则匹配       : key=~value
 - 4：not_reg 正则非匹配 : key!~value
-~~- 对比               : key> value~~
+~~- 对比               : key> value~~ (暂时没支持)
 
 ### 查询条件自由组合
-`labels`可传入多个key和value组合，可自由组合不同kv查询
+- `labels`可传入多个key和value组合，可自由组合不同kv查询
 
 ## 运维stree-index
 ### 监控
@@ -297,5 +332,4 @@ stree-index 会打点，使用prometheus采集查看即可
     static_configs:
     - targets:
       - $stree-index:9393
-
 ```
