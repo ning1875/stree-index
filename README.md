@@ -1,3 +1,7 @@
+# 课程地址
+- [prometheus全组件配置调优实战，一线大厂监控高可用方案分享](https://ke.qq.com/course/3549215?tuin=361e95b0)
+
+
 # 开源项目地址: 
 项目地址: [https://github.com/ning1875/stree-index](https://github.com/ning1875/stree-index)
 
