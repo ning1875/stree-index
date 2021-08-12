@@ -1,6 +1,16 @@
 # 课程地址
 - [prometheus全组件配置调优实战，一线大厂监控高可用方案分享](https://ke.qq.com/course/3549215?tuin=361e95b0)
 
+# 更新说明
+- 这个stree-index之前写的比较挫
+- 比如node_path的自身id拼接
+- 比如全局变量没有使用接口容器
+- 比如没有mock公有云更新的方法
+- 比如没有考虑物理机agent rpc上报信息的case
+- 比如倒排索引模块没有抽取出来
+# 等等这些 处理的都不算好，现在有改进版的的大项目 open-devops 
+- 有需要的联系我购买 ning1875
+![image](https://github.com/ning1875/stree-index/blob/main/images/open-devops.png)
 
 # 开源项目地址: 
 项目地址: [https://github.com/ning1875/stree-index](https://github.com/ning1875/stree-index)
