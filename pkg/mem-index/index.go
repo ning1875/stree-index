@@ -1,28 +1,28 @@
 package mem_index
 
 import (
-	"fmt"
-	"time"
 	"context"
+	"encoding/json"
+	"fmt"
 	"reflect"
 	"strconv"
-	"encoding/json"
+	"time"
 
-	"github.com/jinzhu/gorm"
+	"github.com/deckarep/golang-set"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
-	"golang.org/x/sync/errgroup"
-	"github.com/spf13/viper"
+	"github.com/jinzhu/gorm"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/deckarep/golang-set"
+	"github.com/spf13/viper"
+	"golang.org/x/sync/errgroup"
 
+	"github.com/go-redis/redis"
 	"stree-index/pkg"
 	"stree-index/pkg/common"
 	"stree-index/pkg/config"
-	"stree-index/pkg/inverted-index/labels"
 	ii "stree-index/pkg/inverted-index"
+	"stree-index/pkg/inverted-index/labels"
 	"stree-index/pkg/web/controller/node-path"
-	"github.com/go-redis/redis"
 	"strings"
 )
 
@@ -126,7 +126,7 @@ func FlushAllIdx(logger log.Logger) error {
 
 }
 
-func mapTolsets(m map[string]string) (labels.Labels) {
+func mapTolsets(m map[string]string) labels.Labels {
 	var lset labels.Labels
 	for k, v := range m {
 
@@ -140,7 +140,7 @@ func mapTolsets(m map[string]string) (labels.Labels) {
 	}
 	return lset
 }
-func reflectToLabel(item interface{}) (labels.Labels) {
+func reflectToLabel(item interface{}) labels.Labels {
 	t := reflect.TypeOf(item)
 	v := reflect.ValueOf(item)
 
