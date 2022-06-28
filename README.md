@@ -29,7 +29,6 @@
 - 比如没有考虑物理机agent rpc上报信息的case
 - 比如倒排索引模块没有抽取出来
 # 等等这些 处理的都不算好，现在有改进版的的大项目 open-devops 
-- 有需要的联系我购买 +vx `ning1875`
 - 更有课程放送，让你也学会写go项目
 ![image](https://github.com/ning1875/stree-index/blob/main/images/open-devops.png)
 
